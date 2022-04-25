@@ -157,7 +157,7 @@ class Asia {
         d3.zoomIdentity
             .translate(state.width / 2, state.height / 2)
             //.scale(Math.min(2, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
-            .scale(1.2)
+            .scale(1.0)
             .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
         d3.pointer(event, svg.node())
         );
