@@ -1,20 +1,25 @@
-.container-europe {
+.container-europe,
+.container-asia,
+.container-asia2 {
     display: grid;
     width:100%;
     grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: 1fr 1fr 2fr 2fr;
+    grid-template-rows: 1fr 1fr 2fr;
 }
 h1 {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
     font-size: 40px;
-    text-align: center;
+    text-align: left;
 }
 p {
     text-align: justify;
 }
-#europe-txt {
+
+#europe-txt,
+#asia-txt,
+#asia2-txt {
     width: 100%;
     grid-column-start: 2;
     grid-column-end: 6;
@@ -23,7 +28,9 @@ p {
 
     place-self:center;
 }
-#europe {
+#europe,
+#asia,
+#asia2 {
     width: 100%;
     grid-column-start: 2;
     grid-column-end: 5;
