@@ -3,53 +3,65 @@ class Europe {
     constructor(state, setGlobalState) {
         console.log(state.width);
         console.log(state.height);
+        
+        const perGDPmap  = [{}] ;
+
+        state.pergdp_e.map( d=> {
+            perGDPmap[d.Country] = [d.X2021]
+        })
+        
+        console.log(perGDPmap)
 
         const zoom = d3.zoom()
-        .scaleExtent([1, 2])
-        .on("zoom", zoomed);
+            .scaleExtent([1, 2])
+            .on("zoom", zoomed);
 
         const svg = d3.select("#europe")
-        .append("svg")
-        .attr("viewBox", [0, 0, state.width, state.height])
-        .attr("width",state.width)
-        .attr("height",state.height)
-        .on("click", reset);
+            .append("svg")
+            .attr("viewBox", [0, 0, state.width, state.height])
+            .attr("width",state.width)
+            .attr("height",state.height)
+            .on("click", reset);
 
         const g = svg.append("g");
 
         const color = d3.scaleOrdinal()
-                    .domain(["1. High income: OECD",
-                            "2. High income: nonOECD",
-                            "3. Upper middle income",
-                            "4. Lower middle income",
-                            "5. Low income"])
+                    .domain([1,2,3,4,5])
                     .range(d3.schemeReds[5]);
                     //.range(d3.schemeRdBu[5])
-    
+
         var projection = d3.geoMercator()
                 .scale(400)
-                .center([95,30]) // Pan north 40 degrees
+                .center([90,30]) // Pan north 40 degrees
                 .translate([state.width,state.height]);
 
         var pathGenerator = d3.geoPath(projection);
 
         g.selectAll("path")
-        .data(state.world.features, d => d.properties.brk_name)
-        .enter().append("path")
-        .attr("d", pathGenerator);
+            .data(state.world.features, d => d.properties.admin)
+            .enter().append("path")
+            .attr("d", pathGenerator);
 
         const countries = g.append("g")
             .selectAll("path.countries")
-            .data(state.world.features, d => d.properties.brk_name)
+            .data(state.world.features, d => d.properties.admin)
             .join("path")
             .attr("class", "countries")
-            .attr("fill",d=>color(d.properties.income_grp))
+            .attr("fill",d => { 
+                if (perGDPmap[d.properties.admin] =='NA') {
+                    return "LightGray";
+                } else {
+                    return color(perGDPmap[d.properties.admin]);
+                }
+            })
             .attr("d", d => pathGenerator(d))
             .attr("stroke", "gray")
             .on("click", clicked)
         
+        
+        
         countries.append("title")
-        .text(d => d.properties.brk_name);
+            .text(d => d.properties.admin);
     
         svg.call(zoom);
 
@@ -117,7 +129,7 @@ class Europe {
             console.log(selection);
             d3.selectAll("path.countries").attr("fill",function(d) {     
             //console.log(d)
-            if(selection.includes(d.properties.brk_name)) {
+            if(selection.includes(d.properties.admin)) {
                 return color(d.properties.income_grp);
             } else {
                 // check if everythin is false
@@ -131,8 +143,16 @@ class Europe {
         };
 
     function clicked(event, d) {
+
         const [[x0, y0], [x1, y1]] = pathGenerator.bounds(d);
-        state.stateselected = d.properties.brk_name;
+        //const [[x0, y0], [x1, y1]] = [[80,20],[100,40]]
+        console.log(pathGenerator.bounds(d));
+        console.log(-(x0 + x1) / 2);
+        console.log(-(y0 + y1) / 2);
+        state.stateselected = d.properties.admin;
+
+        // if else statement
+        //  then translate at the bottom.
         console.log(state.stateselected);
         
 
@@ -163,7 +183,10 @@ class Europe {
         );
         
     }
-    
+    function mapPerGDP() {
+        
+        console.log()
+    }
     function zoomed(event) {
         const {transform} = event;
         g.attr("transform", transform);

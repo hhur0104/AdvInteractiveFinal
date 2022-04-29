@@ -15,16 +15,19 @@ let europe, asia, mideast;
 
 let state = {
     world : [],
+    pergdp_e : [],
     stateselected:"none",
     width : window.innerWidth * 0.7,
     height : window.innerHeight * 0.7,
 };
 
 Promise.all([
-    d3.json("./data/world-110m.geo.json")
-   ]).then(([geojson]) => {
+    d3.json("./data/world-110m.geo.json"),
+    d3.csv("./data/pergdp_europe.csv")
+   ]).then(([geojson, pergdp_e]) => {
     state.world = geojson;
-
+    state.pergdp_e = pergdp_e;
+    console.log(state.pergdp_e);
     init();
    });
 
