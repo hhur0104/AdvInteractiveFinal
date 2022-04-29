@@ -76,4 +76,4 @@ pergdp_europe[pergdp_europe <= 1] <- 1
 pergdp_europe$'Country' <- rownames(pergdp_europe)
 write.csv(pergdp_europe, file="pergdp_europe.csv")
 
-View(pergdp_europe[europe,c(73,74)])
+View(pergdp_europe[europe,c(72,73,74)])

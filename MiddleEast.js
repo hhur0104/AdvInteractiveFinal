@@ -1,6 +1,6 @@
 class MiddleEast {
 
-    constructor(state, setGlobalState) {
+    constructor(state) {
         console.log(state.width);
         console.log(state.height);
 
@@ -28,7 +28,7 @@ class MiddleEast {
     
         var projection = d3.geoMercator()
                 .scale(650)
-                .center([100,0]) // Pan north 40 degrees
+                .center([90,10]) // Pan north 40 degrees
                 .translate([state.width,state.height]);
 
         var pathGenerator = d3.geoPath(projection);
@@ -135,7 +135,8 @@ class MiddleEast {
         state.stateselected = d.properties.brk_name;
         console.log(state.stateselected);
         
-
+        // if else statement
+        //  then translate at the bottom.
         event.stopPropagation();
         
         //countries.attr("stroke", "gray");
@@ -159,7 +160,7 @@ class MiddleEast {
             //.scale(Math.min(2, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
             .scale(1.0)
             .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
-        d3.pointer(event, svg.node())
+            //d3.pointer(event, svg.node())
         );
         
     }

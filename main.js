@@ -16,6 +16,9 @@ let europe, asia, mideast;
 let state = {
     world : [],
     pergdp_e : [],
+    europe_i : 0,
+    europe_size: 0,
+    playing: false,
     stateselected:"none",
     width : window.innerWidth * 0.7,
     height : window.innerHeight * 0.7,
@@ -32,16 +35,36 @@ Promise.all([
    });
 
 function init() {
-    europe = new Europe(state, setGlobalState);
-    asia = new Asia(state, setGlobalState);
-    mideast = new MiddleEast(state, setGlobalState);
+    europe = new Europe(state);
+    asia = new Asia(state);
+    mideast = new MiddleEast(state);
+
+    animateEurope();
+    // setGlobalState({europe_i : +1});
 }
 
-// function draw() {
-//     europe.draw(state);
-// }
-
-function setGlobalState(nextState) {
-    state = {...state, ...nextState};
-    draw();
+function animateEurope() {
+    var timer;  // create timer object
+    
+    d3.select('#play-europe')  
+      .on('click', function() {  
+        if(state.playing == false) {  
+          timer = setInterval(function() {
+            if(state.europe_i < state.europe_size) {  
+                state.europe_i +=1;  
+            } else {
+                state.europe_i = 0;  
+            }
+            europe.draw(state);  
+            //d3.select('#clock').html(attributeArray[currentAttribute]);  // update the clock
+          }, 1000);
+          d3.select(this).html('stop');  
+          state.playing = true;   
+        } else {    
+          clearInterval(timer);   
+          d3.select(this).html('play');   
+          state.playing = false;   
+        }
+    });
 }
+

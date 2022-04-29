@@ -1,6 +1,6 @@
 class Asia {
 
-    constructor(state, setGlobalState) {
+    constructor(state) {
         console.log(state.width);
         console.log(state.height);
 
@@ -135,7 +135,9 @@ class Asia {
         state.stateselected = d.properties.brk_name;
         console.log(state.stateselected);
         
-
+        // if else statement
+        //  then translate at the bottom.
+        
         event.stopPropagation();
         
         //countries.attr("stroke", "gray");

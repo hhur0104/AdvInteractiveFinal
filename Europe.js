@@ -1,31 +1,33 @@
 class Europe {
 
-    constructor(state, setGlobalState) {
+    constructor(state) {
         console.log(state.width);
         console.log(state.height);
         
-        const perGDPmap  = [{}] ;
+        this.perGDPmap  = [[]] ;
 
         state.pergdp_e.map( d=> {
-            perGDPmap[d.Country] = [d.X2021]
+            this.perGDPmap[d.Country] = [
+                d.X2012, d.X2013 ,d.X2014, d.X2015, d.X2016, 
+                d.X2017, d.X2018, d.X2019, d.X2020, d.X2021
+            ]
         })
-        
-        console.log(perGDPmap)
+        state.europe_size = this.perGDPmap["Italy"].length
 
         const zoom = d3.zoom()
             .scaleExtent([1, 2])
             .on("zoom", zoomed);
 
-        const svg = d3.select("#europe")
+        this.svg = d3.select("#europe")
             .append("svg")
             .attr("viewBox", [0, 0, state.width, state.height])
             .attr("width",state.width)
             .attr("height",state.height)
             .on("click", reset);
 
-        const g = svg.append("g");
+        const g = this.svg.append("g");
 
-        const color = d3.scaleOrdinal()
+        this.color = d3.scaleOrdinal()
                     .domain([1,2,3,4,5])
                     .range(d3.schemeReds[5]);
                     //.range(d3.schemeRdBu[5])
@@ -42,16 +44,22 @@ class Europe {
             .enter().append("path")
             .attr("d", pathGenerator);
 
+        console.log(this.perGDPmap["Finland"][state.europe_i])
+        
         const countries = g.append("g")
             .selectAll("path.countries")
             .data(state.world.features, d => d.properties.admin)
             .join("path")
             .attr("class", "countries")
             .attr("fill",d => { 
-                if (perGDPmap[d.properties.admin] =='NA') {
-                    return "LightGray";
+                if(this.perGDPmap[d.properties.admin] != undefined) {
+                    if (this.perGDPmap[d.properties.admin][0] == 'NA') {
+                        return "LightGray";
+                    } else {
+                        return this.color(this.perGDPmap[d.properties.admin][0]);
+                    }
                 } else {
-                    return color(perGDPmap[d.properties.admin]);
+                    return "LightGray";
                 }
             })
             .attr("d", d => pathGenerator(d))
@@ -63,25 +71,24 @@ class Europe {
         countries.append("title")
             .text(d => d.properties.admin);
     
-        svg.call(zoom);
+        this.svg.call(zoom);
 
-    // svg.append("g")
-    //      .attr("transform", "translate(750,0)")
-    //      .append(() => legend({color, title: "Income Group", width: 400}))
+        //svg.append("g")
+        //      .attr("transform", "translate(750,0)")
+        //      .append(() => legend({color, title: "Income Group", width: 400}))
             
-        svg.selectAll(".tick")
+        this.svg.selectAll(".tick")
             .on("click", onLegendClick);
     
         function reset() {
             countries.transition().style("fill", null);
             
-            svg.selectAll(".state_name").remove();
+            this.svg.selectAll(".state_name").remove();
             
-            
-            svg.transition().duration(750).call(
+            this.svg.transition().duration(750).call(
                 zoom.transform,
                 d3.zoomIdentity,
-                d3.zoomTransform(svg.node()).invert([state.width / 2, state.height / 2])
+                d3.zoomTransform(this.svg.node()).invert([state.width / 2, state.height / 2])
             );
         }
 
@@ -142,57 +149,72 @@ class Europe {
             })
         };
 
-    function clicked(event, d) {
+        function clicked(event, d) {
 
-        const [[x0, y0], [x1, y1]] = pathGenerator.bounds(d);
-        //const [[x0, y0], [x1, y1]] = [[80,20],[100,40]]
-        console.log(pathGenerator.bounds(d));
-        console.log(-(x0 + x1) / 2);
-        console.log(-(y0 + y1) / 2);
-        state.stateselected = d.properties.admin;
+            const [[x0, y0], [x1, y1]] = pathGenerator.bounds(d);
+            //const [[x0, y0], [x1, y1]] = [[80,20],[100,40]]
+            console.log(pathGenerator.bounds(d));
+            console.log(-(x0 + x1) / 2);
+            console.log(-(y0 + y1) / 2);
+            state.stateselected = d.properties.admin;
 
-        // if else statement
-        //  then translate at the bottom.
-        console.log(state.stateselected);
-        
+            // if else statement
+            //  then translate at the bottom.
+            console.log(state.stateselected);
+            
 
-        event.stopPropagation();
+            event.stopPropagation();
+            
+            //countries.attr("stroke", "gray");
+            //countries.attr("stroke-width", stroke_width_original);
+            countries.transition().style("fill", null);
+            d3.select(this).transition().style("fill", "gray");
+            
+            this.svg.selectAll(".state_name").remove();
+            
+            this.svg.append("text")
+                .attr("x", 500)
+                .attr("y", 100)
+                .style("font-size", "45px")
+                .text(state.stateselected)
+                .attr("class","state_name");
+            
+            this.svg.transition().duration(750).call(
+            zoom.transform,
+            d3.zoomIdentity
+                .translate(state.width / 2, state.height / 2)
+                //.scale(Math.min(2, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
+                .scale(1.0)
+                .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+            d3.pointer(event, this.svg.node())
+            );
+            
+        }
         
-        //countries.attr("stroke", "gray");
-        //countries.attr("stroke-width", stroke_width_original);
-        countries.transition().style("fill", null);
-        d3.select(this).transition().style("fill", "gray");
-        
-        svg.selectAll(".state_name").remove();
-        
-        svg.append("text")
-            .attr("x", 500)
-            .attr("y", 100)
-            .style("font-size", "45px")
-            .text(state.stateselected)
-            .attr("class","state_name");
-        
-        svg.transition().duration(750).call(
-        zoom.transform,
-        d3.zoomIdentity
-            .translate(state.width / 2, state.height / 2)
-            //.scale(Math.min(2, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
-            .scale(1.0)
-            .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
-        d3.pointer(event, svg.node())
-        );
-        
+        function zoomed(event) {
+            const {transform} = event;
+            g.attr("transform", transform);
+            //g.attr("stroke-width", 1 / transform.k);
+            
+        }
+
     }
-    function mapPerGDP() {
-        
-        console.log()
-    }
-    function zoomed(event) {
-        const {transform} = event;
-        g.attr("transform", transform);
-        //g.attr("stroke-width", 1 / transform.k);
-        
-    }
+
+    draw(state) {
+        this.svg.selectAll("path.countries")
+            .transition()
+            .duration(500)
+            .attr("fill",d => { 
+                if(this.perGDPmap[d.properties.admin] != undefined) {
+                    if (this.perGDPmap[d.properties.admin][state.europe_i] =='NA') {
+                        return "LightGray";
+                    } else {
+                        return this.color(this.perGDPmap[d.properties.admin][state.europe_i]);
+                    }
+                } else {
+                    return "LightGray";
+                }
+            })
     }
 }
 export { Europe };
