@@ -5,14 +5,24 @@
     <title>Military Spending in World</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
     <link rel="stylesheet" href="./style.css">  
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous"/>
   </head>
   <body>
+    <script src="./lib/d3.js"></script>
+    <script type= "module" src="main.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
     <div class="container-europe">
         <div id="europe-txt">
             <h1 style=>Europe</h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et dignissim purus. Fusce sit amet volutpat urna. Mauris non sollicitudin libero, sit amet egestas lectus. Donec sit amet quam a risus ultrices iaculis. Quisque rutrum mollis ipsum id dictum. Nunc eu luctus erat. Duis in erat eget arcu tempor finibus vel sit amet tortor. Sed enim quam, euismod non urna ac, rhoncus rhoncus sem. Nam ac nulla eros. Integer condimentum pretium diam, vitae scelerisque nunc tincidunt nec. Maecenas in bibendum nibh, non pulvinar tortor. Suspendisse ut quam nec diam eleifend pharetra.</p>
-            <button id="play-europe">play</button>
-            
+            <div class="europe-remote">
+              <button id="play-europe">play</button>
+              <button id="stop-europe">stop</button>
+              <div id="slider-europe"></div>
+          </div>
         </div>
         <div id="europe"></div>
     </div>
@@ -30,7 +40,6 @@
         </div>
         <div id="asia2"></div>
     </div>
-    <script src="./lib/d3.js"></script>
-    <script type= "module" src="main.js"></script>
+    
   </body>
 </html>

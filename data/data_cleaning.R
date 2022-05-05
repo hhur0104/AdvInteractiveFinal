@@ -23,7 +23,7 @@ json.names[!json.names %in% pergdp$Country] # use this name
 
 pergdp[,c(2:74)] <- pergdp[,c(2:74)]*100
 rownames(pergdp) <- pergdp$Country
-write.csv(pergdp, "pergdp_f.csv")
+write.csv(pergdp, "pergdp_eur_actual.csv")
 
 library(dplyr)
 summary(pergdp[,c(2:74)])
@@ -74,6 +74,6 @@ pergdp_europe[pergdp_europe > 2 & pergdp_europe <= 3] <- 3
 pergdp_europe[pergdp_europe > 1 & pergdp_europe <= 2] <- 2
 pergdp_europe[pergdp_europe <= 1] <- 1
 pergdp_europe$'Country' <- rownames(pergdp_europe)
-write.csv(pergdp_europe, file="pergdp_europe.csv")
+write.csv(pergdp_europe, file="pergdp_eur_cat.csv")
 
 View(pergdp_europe[europe,c(72,73,74)])
