@@ -14,6 +14,8 @@ class Europe {
         })
         console.log("perGDP: ", this.perGDPmap)
         state.europe_size = this.perGDPmap["Italy"].length 
+        this.europe_size = this.perGDPmap["Italy"].length 
+        this.europe_year_list = d3.range(0, 10).map( d => d + 2012);
         
         this.perGDPmap_2  = [[]] ;
         d3.csv("./data/pergdp_eur_actual.csv", d=> {
@@ -42,29 +44,48 @@ class Europe {
             .scaleExtent([1, 2])
             .on("zoom", zoomed);
         
-        //var dataTime = d3.range(0, 10).map( d => d + 2012);
-        var dataTime = d3.range(0, 10).map(d => d);
-
-        var sliderTime = d3.sliderBottom()
-            .min(d3.min(dataTime))
-            .max(d3.max(dataTime))
+        var dataTime = d3.range(0, 10).map( d => d + 2012);
+        
+        this.sliderTime = d3.sliderBottom()
+            .min(0)
+            .max(9)
             .step(1)
-            .width(300)
-            .tickValues(d3.range(2012,2021).map(d => d))
+            .width(state.width * 2/3)
+            .tickFormat(i => dataTime[i])
+            .ticks(10)
+            .handle(d3.symbol().type(d3.symbolCircle))
+            .fill("#69b3a2")
             .on('onchange', val => {
-                state.slider_time 
-              //d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
+                
+                d3.select("#tipDiv-eur").selectAll('circle').attr("r",0);
+
+                clearInterval(state.eur_timer)
+                
+                state.playing = false;
+                state.europe_i = val;
+                state.europe.changeColor(state);  
+                
+                d3.select('#year_eur').text(this.europe_year_list[state.europe_i]);  
+                    
+                d3.selectAll(".cir_"+this.europe_year_list[state.europe_i])
+                        .transition()
+                        .duration(300)
+                        .attr("r",7);
             });
+
         var gTime = d3.select('div#slider-europe')
             .append('svg')
-            .attr('width', 500)
-            .attr('height', 100)
+            .attr('width', 700)
+            .attr('height', 80)
             .append('g')
-            .attr('transform', 'translate(30,30)');
+            .attr('transform', 'translate(30,15)')
+            // .on('click', d=> {
+            //     console.log("slider.clicked.")
+            //     state.sliderClick=true;
+            // });
+            
         
-        
-        
-        gTime.call(sliderTime);
+        gTime.call(this.sliderTime);
 
         var Tooltip = d3.select("#europe")
             .append("div")
@@ -129,13 +150,14 @@ class Europe {
         //  svg.append("g")
         //      .attr("transform", "translate(750,0)")
         //      .append(() => legend({color, title: "Income Group", width: 400}))
-        
+
         this.svg.append("text")
-            .attr("x", 20)
-            .attr("y", state.height - 50)
+            .attr("x", 400)
+            .attr("y", 40)
             .style("font-size", "45px")
             .attr("id","year_eur")
-            .text(state.europe_year_list[state.europe_i]);
+            //.text(state.europe_year_list[state.europe_i]);
+            .text(this.europe_year_list[state.europe_i]);
         
         this.svg.selectAll(".tick")
             .on("click", onLegendClick);
@@ -218,14 +240,15 @@ class Europe {
         };
 
         function clicked(event, d, gdpmap) {
-            console.log(d);
+            
             const [[x0, y0], [x1, y1]] = pathGenerator.bounds(d);
             //const [[x0, y0], [x1, y1]] = [[80,20],[100,40]]
             console.log(pathGenerator.bounds(d));
             console.log(-(x0 + x1) / 2);
             console.log(-(y0 + y1) / 2);
             state.stateselected = d.properties.admin;
-
+            
+            
             // if else statement
             //  then translate at the bottom.
 
@@ -246,13 +269,22 @@ class Europe {
             //         .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
             //     d3.pointer(event, svg.node())
             // );
-            console.log(event)
+            console.log("clicked, num_eur_sel: ", state.num_eur_selected)
+
 
             var tipDiv = d3.select("#tipDiv-eur")
-            tipDiv.selectAll("g").remove();
-            tipDiv.selectAll("svg").remove();
-            tipDiv.selectAll("h2").remove();
-            tipDiv.selectAll("path").remove();
+            if (state.num_eur_selected == 3) {
+                state.num_eur_selected = 1;
+                tipDiv.selectAll("g").remove();
+                tipDiv.selectAll("svg").remove();
+                tipDiv.selectAll("h2").remove();
+                tipDiv.selectAll("path").remove();
+            }
+            // tipDiv.selectAll("g").remove();
+            // tipDiv.selectAll("svg").remove();
+            // tipDiv.selectAll("h2").remove();
+            // tipDiv.selectAll("path").remove();
+            
             tipDiv.attr("width", 300)
                 .attr("height", 200)
                 .style("top", state.drag_y + "px")
@@ -272,7 +304,7 @@ class Europe {
             var dragHandler = d3.drag()
                 .on("drag", function (d) {
                     state.drag_y_eur = d.y+200
-                    state.drag_x_eur = d.x+250
+                    state.drag_x_eur = d.x+100
                     d3.select(this)
                         .style("top", state.drag_y_eur  + "px")
                         .style("left", state.drag_x_eur + "px");
@@ -327,11 +359,12 @@ class Europe {
                   .attr("cy", d=> y_tooltip(d.pergdp))
                   .attr("r", 0)
                   .style("fill", "#69b3a2")
-                  .attr("id", d=> "cir_" + d.year)
+                  .attr("class", d=> "cir_" + d.year)
             
-            d3.select("#cir_"+state.europe_year_list[state.europe_i])
+            d3.selectAll(".cir_" + state.europe.europe_year_list[state.europe_i])
                 .attr("r",7)
             
+            state.num_eur_selected += 1;
         }
         
         function zoomed(event) {
@@ -357,43 +390,46 @@ class Europe {
                     return "LightGray";
                 }
             })
+        this.sliderTime.silentValue(state.europe_i)
     }
 
-    animate(state, europe) {
+    animate(state) {
         var timer;  // create timer object
-        
+        var year_list = this.europe_year_list
+        var europe_max = this.europe_size
         d3.select('#play-europe')  
-          .on('click', function() {  
-            if(state.playing == false) {  
-              timer = setInterval(function() {
-                d3.select("#tipDiv-eur").selectAll('circle').attr("r",0);
-                if(state.europe_i < state.europe_size) {  
-                    state.europe_i +=1;  
-                } else {
-                    state.europe_i = 0;  
-                }
-                
-                europe.changeColor(state);  
-                
-                d3.select('#year_eur').text(state.europe_year_list[state.europe_i]);  
-                
-                d3.select("#cir_"+state.europe_year_list[state.europe_i])
-                    .transition()
-                    .duration(300)
-                    .attr("r",7);
+            .on('click', function() { 
+                //state.sliderClick=false; 
+                if(state.playing == false) {  
+                    timer = setInterval(function() {
+                    d3.select("#tipDiv-eur").selectAll('circle').attr("r",0);
+                    //if(state.europe_i < state.europe_size) {  
+                    if(state.europe_i < europe_max) {  
+                        state.europe_i +=1;  
+                    } else {
+                        state.europe_i = 0;  
+                    }
+                    
+                    state.europe.changeColor(state);  
+                    
+                    d3.select('#year_eur').text(year_list[state.europe_i]);  
+                    
+                    d3.selectAll(".cir_"+year_list[state.europe_i])
+                        .transition()
+                        .duration(300)
+                        .attr("r",7);
 
-              }, 1000);
-              
-              state.playing = true;   
-            } 
+                }, 1000);
+                state.eur_timer = timer
+                state.playing = true;   
+                } 
         });
 
         d3.select('#stop-europe')  
           .on('click', function() {  
             if(state.playing == true) {  
-                clearInterval(timer);   
-               
-              state.playing = false;   
+                clearInterval(state.eur_timer);   
+                state.playing = false;
             } 
         });
     }

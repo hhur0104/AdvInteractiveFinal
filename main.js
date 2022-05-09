@@ -18,8 +18,8 @@ let state = {
     pergdp_e : [],
     europe_i : 0,
     europe_size: 0,
-    europe_year_list : ["2012", "2013", "2014", "2015", "2016",
-                        "2017", "2018", "2019", "2020", "2021"],
+    num_eur_selected: 1,
+    
     playing: false,
     stateselected:"none",
     width : window.innerWidth * 0.7,
@@ -40,7 +40,8 @@ function init() {
     europe = new Europe(state);
     asia = new Asia(state);
     mideast = new MiddleEast(state);
+    state.europe = europe;
 
-    europe.animate(state, europe);
+    europe.animate(state);
     // setGlobalState({europe_i : +1});
 }
