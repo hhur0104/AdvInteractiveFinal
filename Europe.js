@@ -8,34 +8,39 @@ class Europe {
 
         state.pergdp_e.map( d=> {
             this.perGDPmap[d.Country] = [
+                d.X1993 ,d.X1994, d.X1995, d.X1996, 
+                d.X1997, d.X1998, d.X1999, d.X2000, d.X2001,
+                d.X2002, d.X2003 ,d.X2004, d.X2005, d.X2006, 
+                d.X2007, d.X2008, d.X2009, d.X2010, d.X2011,
                 d.X2012, d.X2013 ,d.X2014, d.X2015, d.X2016, 
                 d.X2017, d.X2018, d.X2019, d.X2020, d.X2021
             ]
         })
-        console.log("perGDP: ", this.perGDPmap)
-        state.europe_size = this.perGDPmap["Italy"].length 
+        console.log(this.perGDPmap)
         this.europe_size = this.perGDPmap["Italy"].length 
-        this.europe_year_list = d3.range(0, 10).map( d => d + 2012);
+        this.europe_year_list = d3.range(0, this.europe_size).map( d => d + 1993);
         
         this.perGDPmap_2  = [[]] ;
         d3.csv("./data/pergdp_eur_actual.csv", d=> {
             this.perGDPmap_2[d.Country] = [
-                {"year": 2012, "pergdp":d.X2012},
-                {"year": 2013, "pergdp":d.X2013},
-                {"year": 2014, "pergdp":d.X2014},
-                {"year": 2015, "pergdp":d.X2015},
-                {"year": 2016, "pergdp":d.X2016},
-                {"year": 2017, "pergdp":d.X2017},
-                {"year": 2018, "pergdp":d.X2018},
-                {"year": 2019, "pergdp":d.X2019},
-                {"year": 2020, "pergdp":d.X2020},
-                {"year": 2021, "pergdp":d.X2021}
+                {"year": 1993, "pergdp":d.X1993},
+                {"year": 1994, "pergdp":d.X1994},{"year": 1995, "pergdp":d.X1995},
+                {"year": 1996, "pergdp":d.X1996},{"year": 1997, "pergdp":d.X1997},
+                {"year": 1998, "pergdp":d.X1998},{"year": 1999, "pergdp":d.X1999},
+                {"year": 2000, "pergdp":d.X2000},{"year": 2001, "pergdp":d.X2001},
+                {"year": 2002, "pergdp":d.X2002},{"year": 2003, "pergdp":d.X2003},
+                {"year": 2004, "pergdp":d.X2004},{"year": 2005, "pergdp":d.X2005},
+                {"year": 2006, "pergdp":d.X2006},{"year": 2007, "pergdp":d.X2007},
+                {"year": 2008, "pergdp":d.X2008},{"year": 2009, "pergdp":d.X2009},
+                {"year": 2010, "pergdp":d.X2010},{"year": 2011, "pergdp":d.X2011},
+                {"year": 2012, "pergdp":d.X2012},{"year": 2013, "pergdp":d.X2013},
+                {"year": 2014, "pergdp":d.X2014},{"year": 2015, "pergdp":d.X2015},
+                {"year": 2016, "pergdp":d.X2016},{"year": 2017, "pergdp":d.X2017},
+                {"year": 2018, "pergdp":d.X2018},{"year": 2019, "pergdp":d.X2019},
+                {"year": 2020, "pergdp":d.X2020},{"year": 2021, "pergdp":d.X2021}
             ]
         })
-        // this.color = d3.scaleThreshold()
-        //             .domain([0,1,2,3,4,5,6,7,8])
-        //             .range(d3.schemeReds[9])   
-
+        
         this.color = d3.scaleOrdinal()
                     .domain([1,2,3,4,5])
                     .range(d3.schemeReds[5]);
@@ -44,19 +49,22 @@ class Europe {
             .scaleExtent([1, 2])
             .on("zoom", zoomed);
         
-        var dataTime = d3.range(0, 10).map( d => d + 2012);
+        
+
+        var dataTime = d3.range(0, this.europe_size).map( d => d + 1993);
+        console.log("dataTime:", dataTime)
         
         this.sliderTime = d3.sliderBottom()
             .min(0)
-            .max(9)
+            .max(this.europe_size - 1)
             .step(1)
-            .width(state.width * 2/3)
+            .width(state.width * 3/4 - 20)
             .tickFormat(i => dataTime[i])
-            .ticks(10)
+            .ticks(this.europe_size)
             .handle(d3.symbol().type(d3.symbolCircle))
             .fill("#69b3a2")
             .on('onchange', val => {
-                
+                console.log(val)
                 d3.select("#tipDiv-eur").selectAll('circle').attr("r",0);
 
                 clearInterval(state.eur_timer)
@@ -75,14 +83,10 @@ class Europe {
 
         var gTime = d3.select('div#slider-europe')
             .append('svg')
-            .attr('width', 700)
+            .attr('width', state.width - 200)
             .attr('height', 80)
             .append('g')
             .attr('transform', 'translate(30,15)')
-            // .on('click', d=> {
-            //     console.log("slider.clicked.")
-            //     state.sliderClick=true;
-            // });
             
         
         gTime.call(this.sliderTime);
@@ -106,6 +110,7 @@ class Europe {
                 reset(event)}
             );
 
+        
         const g = this.svg.append("g");
         
         var projection = d3.geoMercator()
@@ -144,23 +149,27 @@ class Europe {
         
         countries.append("title")
             .text(d => d.properties.admin);
-    
-        // countries.call(zoom);
-        
-        //  svg.append("g")
-        //      .attr("transform", "translate(750,0)")
-        //      .append(() => legend({color, title: "Income Group", width: 400}))
 
         this.svg.append("text")
             .attr("x", 400)
             .attr("y", 40)
             .style("font-size", "45px")
             .attr("id","year_eur")
-            //.text(state.europe_year_list[state.europe_i]);
             .text(this.europe_year_list[state.europe_i]);
         
-        this.svg.selectAll(".tick")
-            .on("click", onLegendClick);
+        var legend = d3.legendColor()
+            .scale(this.color)
+            .title("Miliary Spending per GDP")
+            .labels(["less than 1%",
+                     "1% to 2%",
+                     "2% to 3%",
+                     "3% to 4%",
+                     "larger than 4%"]);
+
+        this.svg.append("g")
+            .attr("transform", "translate(20, 40)")
+            .call(legend);
+
     
         function reset(event) {
 
@@ -180,64 +189,9 @@ class Europe {
                 d3.zoomIdentity,
                 d3.zoomTransform(svg.node()).invert([state.width / 2, state.height / 2])
             );
-        }
 
-        function onLegendClick(event, d) {
-            var value = d3.select(this).text()
-            if (value == "1. High income: OECD" && !selected_1) {
-            selected_1 = true;    
-            } else if (value == "1. High income: OECD" && selected_1) {
-            selected_1 = false;
-            } 
-            if (value == "2. High income: nonOECD" && !selected_2) {
-            selected_2 = true;    
-            } else if (value == "2. High income: nonOECD" && selected_2) {
-            selected_2 = false;
-            }
-            if (value == "3. Upper middle income" && !selected_3) {
-            selected_3 = true;    
-            } else if (value == "3. Upper middle income" && selected_3) {
-            selected_3 = false;
-            }
-            if (value == "4. Lower middle income" && !selected_4) {
-            selected_4 = true;    
-            } else if (value == "4. Lower middle income" && selected_4) {
-            selected_4 = false;
-            }
-            if (value == "5. Low income" && !selected_5) {
-            selected_5 = true;    
-            } else if (value == "5. Low income" && selected_5) {
-            selected_5 = false;
-            }
-        
-            // d3.selectAll("path.countries").filter(function(d) {
-            //   return d.properties.income_grp != value;
-            // }).attr("fill", "gray");
-            
-            // d3.selectAll("path.countries").attr("fill",function(d) {     
-            //   if(d.properties.income_grp!= value) {
-            //     return "gray";
-            //   } else {
-            //     return color(d.properties.income_grp);
-            //   }
-            // })
-        
-            var selection = updateSelection(selected_1, selected_2, selected_3, selected_4, selected_5)
-            console.log(selection);
-            d3.selectAll("path.countries").attr("fill",function(d) {     
-            //console.log(d)
-            if(selection.includes(d.properties.admin)) {
-                return color(d.properties.income_grp);
-            } else {
-                // check if everythin is false
-                if (!selected_1 && !selected_2 && !selected_3 && !selected_4 && !selected_5) {
-                return color(d.properties.income_grp);
-                } else {
-                return "gray";
-                }
-            }
-            })
-        };
+            state.num_eur_selected = 1;
+        }
 
         function clicked(event, d, gdpmap) {
             
@@ -248,9 +202,6 @@ class Europe {
             console.log(-(y0 + y1) / 2);
             state.stateselected = d.properties.admin;
             
-            
-            // if else statement
-            //  then translate at the bottom.
 
             event.stopPropagation();
             
@@ -280,17 +231,11 @@ class Europe {
                 tipDiv.selectAll("h2").remove();
                 tipDiv.selectAll("path").remove();
             }
-            // tipDiv.selectAll("g").remove();
-            // tipDiv.selectAll("svg").remove();
-            // tipDiv.selectAll("h2").remove();
-            // tipDiv.selectAll("path").remove();
             
             tipDiv.attr("width", 300)
                 .attr("height", 200)
                 .style("top", state.drag_y + "px")
                 .style("left", state.drag_x + "px")
-                // .style("top", event.layerY + 200 + "px")
-                // .style("left", event.layerX + 300 +"px")
                 .style("position","absolute")
                 .style("border","5px solid black")
                 .style("opacity",0.8)
@@ -315,11 +260,7 @@ class Europe {
             var tipSVG = tipDiv.append("svg")
                 .attr("width", 300 )
                 .attr("height", 200 )
-                
-            //   .append("g")
-            //     .attr("transform",
-            //           "translate(" + margin.left + "," + margin.top + ")");
-            
+        
             var x_tooltip = d3.scaleLinear()
                 .domain(d3.extent(gdpmap[state.stateselected], d => d.year))
                 .range([ 30, 250 ]);
@@ -333,7 +274,6 @@ class Europe {
 
             var y_tooltip = d3.scaleLinear()
                 .domain(d3.extent(gdpmap[state.stateselected], d => d.pergdp))
-                //.domain([0,6])
                 .range([ 160, 10 ]);    
             
             tipSVG.append("g")
@@ -346,6 +286,7 @@ class Europe {
                 .attr("stroke", "#69b3a2")
                 .attr("stroke-width", 4)
                 .attr("d", d3.line()
+                  .defined(d => { console.log("d.pergdp (defined): ",d.pergdp); return d.pergdp !== 'NA'; })
                   .x(d => x_tooltip(d.year))
                   .y(d => y_tooltip(d.pergdp))
                 )
@@ -399,11 +340,11 @@ class Europe {
         var europe_max = this.europe_size
         d3.select('#play-europe')  
             .on('click', function() { 
-                //state.sliderClick=false; 
+                
                 if(state.playing == false) {  
                     timer = setInterval(function() {
                     d3.select("#tipDiv-eur").selectAll('circle').attr("r",0);
-                    //if(state.europe_i < state.europe_size) {  
+                    
                     if(state.europe_i < europe_max) {  
                         state.europe_i +=1;  
                     } else {
