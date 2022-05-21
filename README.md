@@ -1,0 +1,1 @@
+This project visualizes military spending data from Stockholm International Peace Research Institute (https://milex.sipri.org/sipri)
