@@ -41,8 +41,6 @@ class MiddleEast {
             .scaleExtent([1, 2])
             .on("zoom", zoomed);
         
-        
-
         var dataTime = d3.range(0, this.asia2_size).map( d => d + 2004);
         console.log("dataTime:", dataTime)
         
@@ -153,13 +151,13 @@ class MiddleEast {
             .scale(this.color)
             .title("Miliary Spending per GDP")
             .labels(["less than 1%",
-                     "1% to 2%",
-                     "2% to 3%",
-                     "3% to 4%",
-                     "larger than 4%"]);
+                     "1% to 3%",
+                     "3% to 5%",
+                     "5% to 7%",
+                     "larger than 7%"]);
 
         this.svg.append("g")
-            .attr("transform", "translate(20, 400)")
+            .attr("transform", "translate(20, 40)")
             .call(legend);
 
     
@@ -256,9 +254,9 @@ class MiddleEast {
             var tipSVG = tipDiv.append("svg")
                 .attr("width", 300 )
                 .attr("height", 200 )
-        
+            
             var x_tooltip = d3.scaleLinear()
-                .domain(d3.extent(gdpmap[state.stateselected], d => d.year))
+                .domain(d3.extent(gdpmap[state.stateselected], d => parseInt(d.year)))
                 .range([ 30, 250 ]);
             
             tipSVG.append("g")
@@ -269,7 +267,7 @@ class MiddleEast {
                 .attr("transform", "rotate(-65)");
 
             var y_tooltip = d3.scaleLinear()
-                .domain(d3.extent(gdpmap[state.stateselected], d => d.pergdp))
+                .domain(d3.extent(gdpmap[state.stateselected], d => parseFloat(d.pergdp)))
                 .range([ 160, 10 ]);    
             
             tipSVG.append("g")
@@ -282,9 +280,9 @@ class MiddleEast {
                 .attr("stroke", "#69b3a2")
                 .attr("stroke-width", 4)
                 .attr("d", d3.line()
-                  .defined(d => { console.log("d.pergdp (defined): ",d.pergdp); return d.pergdp !== 'NA'; })
-                  .x(d => x_tooltip(d.year))
-                  .y(d => y_tooltip(d.pergdp))
+                  //.defined(d => { console.log("d.pergdp (defined): ",d.pergdp); return d.pergdp !== 'NA'; })
+                  .x(d => x_tooltip(parseInt(d.year)))
+                  .y(d => y_tooltip(parseFloat(d.pergdp)))
                 )
             
             var dot = tipSVG
@@ -292,11 +290,13 @@ class MiddleEast {
                 .data(gdpmap[state.stateselected])
                 .enter()
                 .append('circle')
-                  .attr("cx", d=> x_tooltip(d.year))
-                  .attr("cy", d=> y_tooltip(d.pergdp))
+                  .attr("cx", d=> x_tooltip(parseInt(d.year)))
+                  .attr("cy", d=> y_tooltip(parseFloat(d.pergdp)))
                   .attr("r", 0)
                   .style("fill", "#69b3a2")
                   .attr("class", d=> "cir_asia2_" + d.year)
+            
+            
             
             d3.selectAll(".cir_asia2_" + state.asia2.asia2_year_list[state.asia2_i])
                 .attr("r",7)

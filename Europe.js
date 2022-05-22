@@ -248,7 +248,7 @@ class Europe {
             
             var dragHandler = d3.drag()
                 .on("drag", function (d) {
-                    state.drag_y_eur = d.y+200
+                    state.drag_y_eur = d.sourceEvent.pageY
                     state.drag_x_eur = d.x+100
                     d3.select(this)
                         .style("top", state.drag_y_eur  + "px")
@@ -262,7 +262,7 @@ class Europe {
                 .attr("height", 200 )
         
             var x_tooltip = d3.scaleLinear()
-                .domain(d3.extent(gdpmap[state.stateselected], d => d.year))
+                .domain(d3.extent(gdpmap[state.stateselected], d => parseInt(d.year)))
                 .range([ 30, 250 ]);
             
             tipSVG.append("g")
@@ -273,7 +273,7 @@ class Europe {
                 .attr("transform", "rotate(-65)");
 
             var y_tooltip = d3.scaleLinear()
-                .domain(d3.extent(gdpmap[state.stateselected], d => d.pergdp))
+                .domain(d3.extent(gdpmap[state.stateselected], d => parseFloat(d.pergdp)))
                 .range([ 160, 10 ]);    
             
             tipSVG.append("g")
@@ -286,9 +286,9 @@ class Europe {
                 .attr("stroke", "#69b3a2")
                 .attr("stroke-width", 4)
                 .attr("d", d3.line()
-                  .defined(d => { console.log("d.pergdp (defined): ",d.pergdp); return d.pergdp !== 'NA'; })
-                  .x(d => x_tooltip(d.year))
-                  .y(d => y_tooltip(d.pergdp))
+                  //.defined(d => { console.log("d.pergdp (defined): ",d.pergdp); return d.pergdp !== 'NA'; })
+                  .x(d => x_tooltip(parseInt(d.year)))
+                  .y(d => y_tooltip(parseFloat(d.pergdp)))
                 )
             
             var dot = tipSVG
@@ -296,8 +296,8 @@ class Europe {
                 .data(gdpmap[state.stateselected])
                 .enter()
                 .append('circle')
-                  .attr("cx", d=> x_tooltip(d.year))
-                  .attr("cy", d=> y_tooltip(d.pergdp))
+                  .attr("cx", d=> x_tooltip(parseInt(d.year)))
+                  .attr("cy", d=> y_tooltip(parseFloat(d.pergdp)))
                   .attr("r", 0)
                   .style("fill", "#69b3a2")
                   .attr("class", d=> "cir_" + d.year)

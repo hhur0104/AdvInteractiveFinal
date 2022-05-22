@@ -22,7 +22,9 @@ pergdp$Country[!pergdp$Country %in% json.names] # names to be changed
 json.names[!json.names %in% pergdp$Country] # use this name
 
 pergdp[,c(2:74)] <- pergdp[,c(2:74)]*100
+pergdp[,c(2:74)] <- signif(pergdp[,c(2:74)], digits = 3)
 rownames(pergdp) <- pergdp$Country
+
 write.csv(pergdp, "pergdp_eur_actual.csv")
 
 library(dplyr)
@@ -131,7 +133,7 @@ write.csv(pergdp_asia, file="pergdp_asia_cat.csv")
 ###################################################################
 ################ Middle East ######################################
 ###################################################################
-asia <- c("Bahrain",
+asia2 <- c("Bahrain",
           "Egypt",
           "Iran",
           "Iraq",
@@ -147,20 +149,20 @@ asia <- c("Bahrain",
           "United Arab Emirates",
           "Yemen, North",
           "Yemen")
-table(pergdp$Country %in% asia)
-summary(pergdp[asia,c(2:74)])
+table(pergdp$Country %in% asia2)
+summary(pergdp[asia2,c(2:74)])
 
-table(pergdp[asia,c(53:74)] > 10)
-table(pergdp[asia,c(53:74)] > 9)
-table(pergdp[asia,c(53:74)] > 8)
-table(pergdp[asia,c(53:74)] > 7)
-table(pergdp[asia,c(53:74)] > 6)
-table(pergdp[asia,c(53:74)] > 5)
-table(pergdp[asia,c(53:74)] > 4)
-table(pergdp[asia,c(53:74)] > 3)
-table(pergdp[asia,c(53:74)] > 2)
-table(pergdp[asia,c(53:74)] > 1)
-table(pergdp[asia,c(53:74)] < 1)
+table(pergdp[asia2,c(53:74)] > 10)
+table(pergdp[asia2,c(53:74)] > 9)
+table(pergdp[asia2,c(53:74)] > 8)
+table(pergdp[asia2,c(53:74)] > 7)
+table(pergdp[asia2,c(53:74)] > 6)
+table(pergdp[asia2,c(53:74)] > 5)
+table(pergdp[asia2,c(53:74)] > 4)
+table(pergdp[asia2,c(53:74)] > 3)
+table(pergdp[asia2,c(53:74)] > 2)
+table(pergdp[asia2,c(53:74)] > 1)
+table(pergdp[asia2,c(53:74)] < 1)
 
 pergdp_asia <- pergdp[,c(2:74)]
 pergdp_asia[pergdp_asia > 7] <- "F5"

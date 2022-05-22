@@ -16,6 +16,7 @@ let state = {
     num_asia2_selected: 1,
     playing: false,
     playing_a:false,
+    playing_a2:false,
     stateselected:"none",
     width : window.innerWidth * 0.7,
     height : window.innerHeight * 0.7,

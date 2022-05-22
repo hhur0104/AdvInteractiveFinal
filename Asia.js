@@ -8,8 +8,7 @@ class Asia {
 
         state.pergdp_e.map( d=> {
             this.perGDPmap[d.Country] = [
-                d.X2001,
-                d.X2002, d.X2003 ,d.X2004, d.X2005, d.X2006, 
+                d.X2003 ,d.X2004, d.X2005, d.X2006, 
                 d.X2007, d.X2008, d.X2009, d.X2010, d.X2011,
                 d.X2012, d.X2013 ,d.X2014, d.X2015, d.X2016, 
                 d.X2017, d.X2018, d.X2019, d.X2020, d.X2021
@@ -17,13 +16,12 @@ class Asia {
         })
         console.log(this.perGDPmap)
         this.asia_size = this.perGDPmap["China"].length 
-        this.asia_year_list = d3.range(0, this.asia_size).map( d => d + 2001);
+        this.asia_year_list = d3.range(0, this.asia_size).map( d => d + 2003);
         
         this.perGDPmap_2  = [[]] ;
         d3.csv("./data/pergdp_eur_actual.csv", d=> {
             this.perGDPmap_2[d.Country] = [
-                {"year": 2001, "pergdp":d.X2001},
-                {"year": 2002, "pergdp":d.X2002},{"year": 2003, "pergdp":d.X2003},
+                {"year": 2003, "pergdp":d.X2003},
                 {"year": 2004, "pergdp":d.X2004},{"year": 2005, "pergdp":d.X2005},
                 {"year": 2006, "pergdp":d.X2006},{"year": 2007, "pergdp":d.X2007},
                 {"year": 2008, "pergdp":d.X2008},{"year": 2009, "pergdp":d.X2009},
@@ -46,7 +44,7 @@ class Asia {
         
         
 
-        var dataTime = d3.range(0, this.asia_size).map( d => d + 2001);
+        var dataTime = d3.range(0, this.asia_size).map( d => d + 2003);
         console.log("dataTime:", dataTime)
         
         this.sliderTime = d3.sliderBottom()
@@ -185,7 +183,7 @@ class Asia {
                 d3.zoomTransform(svg.node()).invert([state.width / 2, state.height / 2])
             );
 
-            state.num_eur_selected = 1;
+            state.num_asia_selected = 1;
         }
 
         function clicked(event, d, gdpmap) {
@@ -261,7 +259,7 @@ class Asia {
                 .attr("height", 200 )
         
             var x_tooltip = d3.scaleLinear()
-                .domain(d3.extent(gdpmap[state.stateselected], d => d.year))
+                .domain(d3.extent(gdpmap[state.stateselected], d => parseInt(d.year)))
                 .range([ 30, 250 ]);
             
             tipSVG.append("g")
@@ -272,12 +270,16 @@ class Asia {
                 .attr("transform", "rotate(-65)");
 
             var y_tooltip = d3.scaleLinear()
-                .domain(d3.extent(gdpmap[state.stateselected], d => d.pergdp))
+                .domain(d3.extent(gdpmap[state.stateselected], d => parseFloat(d.pergdp)))
                 .range([ 160, 10 ]);    
             
+            console.log("Vietnam, extent",d3.extent(gdpmap["Vietnam"], d => parseFloat(d.pergdp)))
+
             tipSVG.append("g")
                 .attr("transform", "translate(30," + 0 + ")")
                 .call(d3.axisLeft(y_tooltip));
+            
+            console.log(state.stateselected, gdpmap[state.stateselected])
             
             tipSVG.append("path")
                 .datum(gdpmap[state.stateselected])
@@ -285,9 +287,8 @@ class Asia {
                 .attr("stroke", "#69b3a2")
                 .attr("stroke-width", 4)
                 .attr("d", d3.line()
-                  .defined(d => { console.log("d.pergdp (defined): ",d.pergdp); return d.pergdp !== 'NA'; })
-                  .x(d => x_tooltip(d.year))
-                  .y(d => y_tooltip(d.pergdp))
+                  .x(d => x_tooltip(parseInt(d.year)))
+                  .y(d => y_tooltip(parseFloat(d.pergdp)))
                 )
             
             var dot = tipSVG
@@ -295,8 +296,8 @@ class Asia {
                 .data(gdpmap[state.stateselected])
                 .enter()
                 .append('circle')
-                  .attr("cx", d=> x_tooltip(d.year))
-                  .attr("cy", d=> y_tooltip(d.pergdp))
+                  .attr("cx", d=> x_tooltip(parseInt(d.year)))
+                  .attr("cy", d=> { return y_tooltip(parseFloat(d.pergdp))})
                   .attr("r", 0)
                   .style("fill", "#69b3a2")
                   .attr("class", d=> "cir_asia_" + d.year)

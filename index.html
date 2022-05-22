@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Military Spending in World</title>
+    <title>World On Military Spending</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
     <link rel="stylesheet" href="./style.css">  
     <link rel="stylesheet"
@@ -15,10 +15,17 @@
     <script type= "module" src="main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
     <script src="https://unpkg.com/d3-simple-slider"></script>
+    <div class="container-intro">
+        <h1 class="h1-intro"> World On Military Spending </h1>
+        <h2 class="h2-intro"> by Hong Hur</h2>
+        <p class="p-intro"> It is May 2022. Russia invaded Ukraine for the second time in less than 10 years span and the conflict lingers on for more than 3 months with millions of people impacted by it with little or no major achievement by Russia. Meanwhile, the news and media warn us about the next possible conflict in the South China Sea. The concern is the China extending its influence over the sea territories and trade routes, and its position of not recognizing Taiwan as a sovereign nation may result in a military confrontation between the two nations. As Biden visits countries in Asia, China vocalizes its concern about U.S. presence and intervention in the area. Lastly, to this day, the world is yet to see a fair resolution of the conflicts among middle east nations, and the friction lives on with seemingly irreconcilable differences that are deeply rooted in history. Now with U.S troops coming home after years of its presence in Afghanistan, middle east nations are left to deal with this geopolitical condition. To study these regions with probable conflicts and see how the tensions are growing, I set out to explore whether military spending data published by SPIRI speaks in tone with the current events. Does military spending data show similar patterns in these regions? Are tensions growing?
+        </p>
+    </div>
     <div class="container-europe">
         <div id="europe-txt">
             <h1 style=>Russia. vs. Europe</h1>
-            <p>Back to cold war era? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et dignissim purus. Fusce sit amet volutpat urna. Mauris non sollicitudin libero, sit amet egestas lectus. Donec sit amet quam a risus ultrices iaculis. Quisque rutrum mollis ipsum id dictum. Nunc eu luctus erat. Duis in erat eget arcu tempor finibus vel sit amet tortor. Sed enim quam, euismod non urna ac, rhoncus rhoncus sem. Nam ac nulla eros. Integer condimentum pretium diam, vitae scelerisque nunc tincidunt nec. Maecenas in bibendum nibh, non pulvinar tortor. Suspendisse ut quam nec diam eleifend pharetra.</p>
+            <p> The data shows a clear pattern in Europe. The whole region's military spending shows a consistent decrease after the fall of the soviet union in 1991. Then there are slight upticks in some countries in the early 2000s. Then in the last few years, almost all European nations increased their spending. Most notably, all the nations that share borders with Russia have increased their spending. Belarus, however, is an exception. Likely because it has been friendly with Russia in geopolitical terms traditionally. But still, most of these European countries spend less than 3% of their GDP on military spending.
+            </p>
             <div class="europe-remote" style="display:flex; width:100%">
               <button class="btn" id="play-europe" style="height: 50px">play</button>
               <div id="slider-europe"></div>
@@ -30,7 +37,8 @@
     <div class="container-asia">
         <div id="asia-txt">
             <h1 style=>South China Sea</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et dignissim purus. Fusce sit amet volutpat urna. Mauris non sollicitudin libero, sit amet egestas lectus. Donec sit amet quam a risus ultrices iaculis. Quisque rutrum mollis ipsum id dictum. Nunc eu luctus erat. Duis in erat eget arcu tempor finibus vel sit amet tortor. Sed enim quam, euismod non urna ac, rhoncus rhoncus sem. Nam ac nulla eros. Integer condimentum pretium diam, vitae scelerisque nunc tincidunt nec. Maecenas in bibendum nibh, non pulvinar tortor. Suspendisse ut quam nec diam eleifend pharetra.</p>
+            <p>Secondly, in the South China Sea, nations are surprisingly out of tune with the spending data. There is no clear pattern. Although China’s spending on the military for the last few years is comparably lower than in the early 2000s, it has been increasing recently. On the contrary, the Taiwan government’s spending on the military does not show a clear upward curve and is on a declining slope in long term. Japan and Korea are both slowly increasing their spending on the military. Some countries in South Asia have increased their spending, while some decreased. There is no clear pattern. Like Europe, this region's overall per GDP percentage of military spending is less than 3%.
+            </p>
             <div class="asia-remote" style="display:flex; width:100%">
               <button class="btn" id="play-asia" style="height: 50px">play</button>
               <div id="slider-asia"></div>
@@ -42,7 +50,8 @@
     <div class="container-asia2">
         <div id="asia2-txt">
             <h1 style=>Middle East</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et dignissim purus. Fusce sit amet volutpat urna. Mauris non sollicitudin libero, sit amet egestas lectus. Donec sit amet quam a risus ultrices iaculis. Quisque rutrum mollis ipsum id dictum. Nunc eu luctus erat. Duis in erat eget arcu tempor finibus vel sit amet tortor. Sed enim quam, euismod non urna ac, rhoncus rhoncus sem. Nam ac nulla eros. Integer condimentum pretium diam, vitae scelerisque nunc tincidunt nec. Maecenas in bibendum nibh, non pulvinar tortor. Suspendisse ut quam nec diam eleifend pharetra.</p>
+            <p>The most noticeable difference in this region compared to the other two I have examined is that the overall per GDP percentage is somewhere between 5 to 7%. In other words, countries here spend more on military spending than in Europe or the other part of Asia. The up and down movement of each nation's record is quite tumultuous. But there is a regional trend that can be observed by colors changing together. When the spending rate of more influential nations like Saudi Arabia and Iran move up or down, other countries' rates also move in a matching direction. For Saudi Arabia and Oman, the rate climbed as far as above 10% in the 2010s, though it came back down to the 5-7% range recently. Kuwait and Jordan show an upward curve. But, most countries' spending rate is on the downward slope. 
+            </p>
             <div class="asia2-remote" style="display:flex; width:100%">
               <button class="btn" id="play-asia2" style="height: 50px">play</button>
               <div id="slider-asia2"></div>
