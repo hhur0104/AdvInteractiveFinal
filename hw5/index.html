@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>DAT608 Hw5 Hong Hur</title>
+        <style>
+            @keyframes flash {
+                from { background-color: rgb(91, 56, 56); }
+                to { background-color: inherit; }
+            }
+                
+            .flash {
+                animation: flash 1s ;
+            }
+        </style>
+    </head>
+    <body>
+        <div id='container'></div>
+        
+        <h3>Enter Last Name of President:</h3>
+        <input id="name-input" />
+        <button id="name-submit" onclick="showInfo()">Enter</button>
+        <p id='height'></p>
+        <p id='weight'></p>
+        <script src="./lib/d3.js"></script>
+        <script src="main.js"></script>
+        <script>
+            const node = document.getElementById("name-input");
+            node.addEventListener("keyup", ({key}) => {
+                if (key === "Enter") {
+                    showInfo()
+                }
+            })
+        </script>
+    </body>
+</html>
